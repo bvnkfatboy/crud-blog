@@ -2,11 +2,13 @@
     "posts": [
       {
         "id": 1,
-        "title": "hello"
+        "title": "hello",
+        "body": "body1"
       },
       {
         "id": 2,
-        "title": "hello"
+        "title": "hello",
+        "body": "body2"
       }
     ]
   }
