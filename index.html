@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>CRUD ด้วย JSONPlaceholder</title>
+    <style>
+        /* เพิ่ม CSS ตามที่คุณต้องการ */
+    </style>
+</head>
+<body>
+    <h1>รายการผู้ใช้</h1>
+    <ul id="user-list">
+        <!-- รายการผู้ใช้จะแสดงที่นี่ -->
+    </ul>
+    <button id="add-user">เพิ่มผู้ใช้</button>
+    <div id="user-form" style="display: none;">
+        <!-- แบบฟอร์มเพิ่มผู้ใช้จะแสดงที่นี่ -->
+        <input type="text" id="name" placeholder="ชื่อ">
+        <input type="text" id="email" placeholder="อีเมล">
+        <button id="save-user">บันทึก</button>
+        <button id="cancel-user">ยกเลิก</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
