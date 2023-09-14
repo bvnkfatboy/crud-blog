@@ -1,27 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CRUD ด้วย JSONPlaceholder</title>
-    <style>
-        /* เพิ่ม CSS ตามที่คุณต้องการ */
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
-    <h1>รายการผู้ใช้</h1>
-    <ul id="user-list">
-        <!-- รายการผู้ใช้จะแสดงที่นี่ -->
-    </ul>
-    <button id="add-user">เพิ่มผู้ใช้</button>
-    <div id="user-form" style="display: none;">
-        <!-- แบบฟอร์มเพิ่มผู้ใช้จะแสดงที่นี่ -->
-        <input type="text" id="name" placeholder="ชื่อ">
-        <input type="text" id="email" placeholder="อีเมล">
-        <button id="save-user">บันทึก</button>
-        <button id="cancel-user">ยกเลิก</button>
-    </div>
+    
+    <ul id="postList"></ul>
+    <h2>Edit Post</h2>
+    <form id="editPostForm">
+        <input type="hidden" id="editPostId">
+        <input type="text" id="editTitle" placeholder="Title" required>
+        <input type="text" id="editBody" placeholder="Body" required>
+        <button type="submit">Update Post</button>
+    </form>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="main.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function () {
+    const postList = $("#postList");
+    const addPostForm = $("#addPostForm");
+    const editPostForm = $("#editPostForm");
+
+    // ดึงข้อมูลโพสท์และแสดงในรายการ
+    function getPosts() {
+        $.get("https://my-json-server.typicode.com/bvnkfatboy/crud-blog/posts", function (data) {
+            postList.empty();
+            data.forEach(function (post) {
+                postList.append(`
+                    <li>
+                        ${post.title}
+                        <button class="edit" data-id="${post.id}">Edit</button>
+                        <button class="delete" data-id="${post.id}">Delete</button>
+                    </li>
+                `);
+            });
+        });
+    }
+
+    // เพิ่มโพสท์ใหม่
+    addPostForm.submit(function (e) {
+        e.preventDefault();
+        const title = $("#title").val();
+        const body = $("#body").val();
+
+        $.post("https://my-json-server.typicode.com/bvnkfatboy/crud-blog/posts", { title, body }, function () {
+            getPosts();
+            addPostForm[0].reset();
+        });
+    });
+
+    // แก้ไขโพสท์
+    postList.on("click", ".edit", function () {
+        const postId = $(this).data("id");
+
+        $.get(`https://my-json-server.typicode.com/bvnkfatboy/crud-blog/posts/${postId}`, function (post) {
+            $("#editPostId").val(post.id);
+            $("#editTitle").val(post.title);
+            $("#editBody").val(post.body);
+        });
+    });
+
+    editPostForm.submit(function (e) {
+        e.preventDefault();
+        const postId = $("#editPostId").val();
+        const title = $("#editTitle").val();
+        const body = $("#editBody").val();
+
+        $.ajax({
+            url: `https://my-json-server.typicode.com/bvnkfatboy/crud-blog/posts/${postId}`,
+            method: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify({ id: postId, title, body }),
+            success: function () {
+                getPosts();
+                editPostForm[0].reset();
+            },
+        });
+    });
+
+    // ลบโพสท์
+    postList.on("click", ".delete", function () {
+        const postId = $(this).data("id");
+
+        $.ajax({
+            url: `https://my-json-server.typicode.com/bvnkfatboy/crud-blog/posts/${postId}`,
+            method: "DELETE",
+            success: function () {
+                getPosts();
+            },
+        });
+    });
+
+    // โหลดรายการโพสท์เมื่อเริ่มต้น
+    getPosts();
+});
+
+
+</script>
 </body>
 </html>
